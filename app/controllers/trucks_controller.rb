@@ -3,7 +3,7 @@ class TrucksController < ApplicationController
 
   def index
     @pagy, @trucks = pagy(Truck.all)
-    render json: index
+    render :index
   end
 
   def assign
