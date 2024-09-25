@@ -2,8 +2,8 @@ class TrucksController < ApplicationController
     before_action :authenticate_driver
 
   def index
-    @trucks = Truck.all
-    render json: @trucks
+    @pagy, @trucks = pagy(Truck.all)
+    render json: index
   end
 
   def assign
