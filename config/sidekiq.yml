@@ -1,0 +1,11 @@
+:concurrency: 5
+:queues:
+  - default
+  - mailers
+
+:scheduler:
+  :schedule:
+    fetch_trucks_worker:
+      cron: "0 0 * * *"  
+      class: "FetchTrucksWorker"
+      queue: default
