@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -10,34 +12,34 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_09_25_232206) do
+ActiveRecord::Schema[7.0].define(version: 20_240_925_232_206) do
   # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
+  enable_extension 'plpgsql'
 
-  create_table "assignments", force: :cascade do |t|
-    t.bigint "driver_id", null: false
-    t.bigint "truck_id", null: false
-    t.datetime "assigned_at", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["driver_id"], name: "index_assignments_on_driver_id"
-    t.index ["truck_id"], name: "index_assignments_on_truck_id"
+  create_table 'assignments', force: :cascade do |t|
+    t.bigint 'driver_id', null: false
+    t.bigint 'truck_id', null: false
+    t.datetime 'assigned_at', null: false
+    t.datetime 'created_at', null: false
+    t.datetime 'updated_at', null: false
+    t.index ['driver_id'], name: 'index_assignments_on_driver_id'
+    t.index ['truck_id'], name: 'index_assignments_on_truck_id'
   end
 
-  create_table "drivers", force: :cascade do |t|
-    t.string "email", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "password_digest"
+  create_table 'drivers', force: :cascade do |t|
+    t.string 'email', null: false
+    t.datetime 'created_at', null: false
+    t.datetime 'updated_at', null: false
+    t.string 'password_digest'
   end
 
-  create_table "trucks", force: :cascade do |t|
-    t.string "name", null: false
-    t.string "truck_type", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+  create_table 'trucks', force: :cascade do |t|
+    t.string 'name', null: false
+    t.string 'truck_type', null: false
+    t.datetime 'created_at', null: false
+    t.datetime 'updated_at', null: false
   end
 
-  add_foreign_key "assignments", "drivers"
-  add_foreign_key "assignments", "trucks"
+  add_foreign_key 'assignments', 'drivers'
+  add_foreign_key 'assignments', 'trucks'
 end

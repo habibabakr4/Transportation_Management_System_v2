@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AuthController < ApplicationController
   skip_before_action :authenticate_driver, only: [:signup]
 
@@ -14,23 +16,17 @@ class AuthController < ApplicationController
 
   def login
     Rails.logger.debug "Login process started with params: #{params.inspect}"
-  
+
     driver = Driver.find_by(email: params[:email])
-    Rails.logger.debug "Driver found: #{driver.inspect}" if driver
-  
-    if driver && driver.authenticate(params[:password])
-      Rails.logger.debug "Driver authenticated successfully."
-  
-      # You can still generate the token if you need it for future requests,
-      # but here you will just return the success message.
+
+    if driver&.authenticate(params[:password])
+
       render json: { message: 'Authorized successfully' }, status: :ok
     else
-      Rails.logger.debug "Invalid email or password. Driver: #{driver.inspect}"
-  
+
       render json: { error: 'Invalid email or password' }, status: :unauthorized
     end
   end
-  
 
   private
 

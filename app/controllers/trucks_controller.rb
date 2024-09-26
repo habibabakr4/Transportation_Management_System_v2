@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TrucksController < ApplicationController
   before_action :authenticate_driver
 
@@ -13,12 +15,12 @@ class TrucksController < ApplicationController
     truck = Truck.find(params[:truck_id])
 
     if truck
-      Assignment.create(driver: @current_driver, truck: truck)
+      Assignment.create(driver: @current_driver, truck:)
       Rails.logger.info("Truck #{truck.id} assigned to driver #{@current_driver.id}")
-      render json: { message: "Truck assigned" }, status: :ok
+      render json: { message: 'Truck assigned' }, status: :ok
     else
       Rails.logger.error("Truck not found: #{params[:truck_id]}")
-      render json: { error: "Truck not found" }, status: :not_found
+      render json: { error: 'Truck not found' }, status: :not_found
     end
   end
 
