@@ -8,11 +8,15 @@ class ApplicationController < ActionController::API
 
   def authenticate_driver
     token = request.headers['Authorization']&.split(' ')&.last
-
-    @current_driver = JwtService.decode(token) if token
-
+  
+    if token
+      decoded_token = JwtService.decode(token)
+      @current_driver = Driver.find_by(id: decoded_token['driver_id']) if decoded_token
+    end
+  
     return if @current_driver
-
+  
     render json: { error: 'Unauthorized' }, status: :unauthorized
   end
+  
 end

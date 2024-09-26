@@ -17,7 +17,7 @@ RSpec.describe 'TrucksController', type: :request do
       it 'returns a list of trucks' do
         get '/trucks', headers: valid_headers
         expect(response).to have_http_status(:ok)
-        expect(assigns(:trucks)).to match_array([truck1, truck2])
+        expect(JSON.parse(response.body)).to match_array([truck1, truck2].as_json)
       end
     end
 
@@ -58,14 +58,14 @@ RSpec.describe 'TrucksController', type: :request do
   end
 
   describe 'GET /my_trucks' do
-    let!(:assignment1) { Assignment.create(driver:, truck: truck1, assignment_date: Time.now) }
-    let!(:assignment2) { Assignment.create(driver:, truck: truck2, assignment_date: Time.now) }
+    let!(:assignment1) { Assignment.create(driver:, truck: truck1, assigned_at: Time.now) }
+    let!(:assignment2) { Assignment.create(driver:, truck: truck2, assigned_at: Time.now) }
 
     context 'when authenticated' do
       it 'returns a list of trucks assigned to the current driver' do
         get '/trucks/my_trucks', headers: valid_headers
         expect(response).to have_http_status(:ok)
-        expect(assigns(:assignments).map(&:truck)).to match_array([truck1, truck2])
+        expect(JSON.parse(response.body)).to match_array([truck1, truck2].as_json)
       end
     end
 

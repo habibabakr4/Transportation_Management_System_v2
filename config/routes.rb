@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   post 'signup', to: 'auth#signup'
   post 'login', to: 'auth#login'
   # config/routes.rb
-  resources :trucks, only: [:index] do
+  resources :trucks, only: [:index, :create ] do
     post 'assign', on: :collection
     get 'my_trucks', on: :collection
   end
