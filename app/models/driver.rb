@@ -4,4 +4,12 @@ class Driver < ApplicationRecord
     has_many :trucks, through: :assignments
   
     validates :email, presence: true, uniqueness: true
+
+    after_create :log_driver_creation
+
+  private
+
+    def log_driver_creation
+        Rails.logger.info("Driver created with ID: #{self.id}")
+    end
 end

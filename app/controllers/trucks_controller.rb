@@ -1,22 +1,31 @@
 class TrucksController < ApplicationController
-    before_action :authenticate_driver
+  before_action :authenticate_driver
 
   def index
-    @pagy, @trucks = pagy(Truck.all)
-    render :index
+    Rails.logger.info("Fetching all trucks for driver: #{@current_driver.id}")
+    @trucks = Truck.all
+    Rails.logger.info("Found #{@trucks.count} trucks")
+    render json: @trucks
   end
 
   def assign
-    assignment = Assignment.create(driver_id: @current_driver.id, truck_id: params[:truck_id], assignment_date: Time.now)
-    if assignment.persisted?
-      render json: assignment, status: :created
+    Rails.logger.info("Assigning truck #{params[:truck_id]} to driver #{@current_driver.id}")
+    truck = Truck.find(params[:truck_id])
+
+    if truck
+      Assignment.create(driver: @current_driver, truck: truck)
+      Rails.logger.info("Truck #{truck.id} assigned to driver #{@current_driver.id}")
+      render json: { message: "Truck assigned" }, status: :ok
     else
-      render json: { errors: assignment.errors.full_messages }, status: :unprocessable_entity
+      Rails.logger.error("Truck not found: #{params[:truck_id]}")
+      render json: { error: "Truck not found" }, status: :not_found
     end
   end
 
   def my_trucks
-    @assignments = @current_driver.assignments.includes(:truck)
-    render json: @assignments, include: :truck
+    Rails.logger.info("Fetching trucks for driver: #{@current_driver.id}")
+    @trucks = @current_driver.trucks
+    Rails.logger.info("Driver #{@current_driver.id} has #{@trucks.count} trucks")
+    render json: @trucks
   end
 end
