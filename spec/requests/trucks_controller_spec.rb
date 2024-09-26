@@ -28,7 +28,6 @@ RSpec.describe 'TrucksController', type: :request do
       end
     end
   end
-
   describe 'POST /assign' do
     context 'when authenticated' do
       it 'assigns a truck to the driver' do
@@ -42,10 +41,20 @@ RSpec.describe 'TrucksController', type: :request do
         expect(assignment.truck_id).to eq(truck1.id)
       end
 
-      it 'returns an error if the assignment fails' do
+      it 'returns an error if the truck_id is nil' do
         post '/trucks/assign', params: { truck_id: nil }, headers: valid_headers
         expect(response).to have_http_status(:unprocessable_entity)
-        expect(JSON.parse(response.body)['errors']).to be_present
+        expect(JSON.parse(response.body)['error']).to eq('Truck ID is required')
+      end      
+
+      it 'returns an error if the assignment fails due to validation issues' do
+        allow_any_instance_of(Assignment).to receive(:save).and_return(false)
+        
+        allow_any_instance_of(Assignment).to receive(:errors).and_return(double(full_messages: ['Some error occurred']))
+
+        post '/trucks/assign', params: { truck_id: truck1.id }, headers: valid_headers
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(JSON.parse(response.body)['errors']).to include('Some error occurred') 
       end
     end
 

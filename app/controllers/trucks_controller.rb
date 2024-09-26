@@ -28,27 +28,30 @@ class TrucksController < ApplicationController
 
   def assign
     if @current_driver.nil?
-      Rails.logger.error("Current driver not found.")
       render json: { error: 'Unauthorized' }, status: :unauthorized and return
     end
   
-    Rails.logger.info("Assigning truck #{params[:truck_id]} to driver #{@current_driver.id}")
+    if params[:truck_id].nil?
+      render json: { error: 'Truck ID is required' }, status: :unprocessable_entity and return
+    end
+  
     truck = Truck.find_by(id: params[:truck_id])
   
     if truck
       assignment = Assignment.new(driver: @current_driver, truck: truck, assigned_at: Time.now)
+  
       if assignment.save
-        Rails.logger.info("Truck #{truck.id} assigned to driver #{@current_driver.id}")
-        render json: { message: 'Truck assigned' }, status: :ok
+        render json: assignment, status: :created
       else
-        Rails.logger.error("Failed to assign truck: #{assignment.errors.full_messages.join(", ")}")
-        render json: { error: 'Assignment failed', errors: assignment.errors.full_messages }, status: :unprocessable_entity
+        Rails.logger.error("Assignment errors: #{assignment.errors.full_messages}")
+        render json: { errors: assignment.errors.full_messages }, status: :unprocessable_entity
       end
     else
       Rails.logger.error("Truck not found: #{params[:truck_id]}")
       render json: { error: 'Truck not found' }, status: :not_found
     end
   end
+  
   
 
   def my_trucks
