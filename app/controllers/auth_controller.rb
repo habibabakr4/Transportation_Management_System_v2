@@ -15,7 +15,6 @@ class AuthController < ApplicationController
   end
 
   def login
-    Rails.logger.debug "Login process started with params: #{params.inspect}"
 
     driver = Driver.find_by(email: params[:email])
 
